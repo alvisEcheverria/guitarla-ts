@@ -1,11 +1,12 @@
 import { useEffect, useState, useMemo } from 'react';
 import { db } from '../data/db';
+import type { Guitar, CartItem, CartContext } from "../types";
 
-export const useCart = () => {
+export const useCart = (): CartContext => {
     
-    const [ data ] = useState(db);
-    const [ cart, setCart ] = useState(getStoredCart);
-  
+    const [ data ] = useState<Guitar[]>(db);
+    const [ cart, setCart ] = useState<CartItem[]>(getStoredCart);
+    console.log(getStoredCart())
     function getStoredCart(){
       const storedCart = localStorage.getItem("cart");
       return storedCart? JSON.parse(storedCart) : [];
@@ -18,8 +19,8 @@ export const useCart = () => {
     const MAX_QUANTITY = 5;
     const MIN_QUANTITY = 0;
   
-    const addToCart = (item) => {
-      const itemExists = cart.findIndex(i => i.id === item.id);
+    const addToCart = (item: Guitar) => {
+      const itemExists = cart.findIndex((element: CartItem) => element.id === item.id);
   
       if(itemExists >= 0){
         if(cart[itemExists].quantity >= MAX_QUANTITY) return;
@@ -27,19 +28,18 @@ export const useCart = () => {
         updatedCart[itemExists].quantity++;
         setCart(updatedCart);
       } else {
-        item.quantity = 1;
-        setCart(prevCart => [...prevCart, item]);
+        const newItem: CartItem = {...item, quantity: 1};
+        setCart([...cart, newItem]);
       }
     };
   
-    const removeFromCart = itemId => {  
-      const updatedCart = cart.filter(item => item.id !== itemId);
-      
+    const removeFromCart = (itemId : Guitar["id"])  => {  
+      const updatedCart = cart.filter((item: CartItem) => item.id !== itemId);
       setCart(updatedCart);
     };
   
-    const increaseQuantity = itemId => {
-      const updatedCart = cart.map(item => {
+    const increaseQuantity = (itemId : Guitar["id"])  => {
+      const updatedCart = cart.map((item: CartItem) => {
         if(item.id === itemId && item.quantity < MAX_QUANTITY){
           return {
             ...item,
@@ -51,8 +51,8 @@ export const useCart = () => {
       setCart(updatedCart);
     };
   
-    const decreaseQuantity = itemId => {
-      const updatedCart = cart.map(item => {
+    const decreaseQuantity = (itemId : Guitar["id"]) => {
+      const updatedCart = cart.map((item: CartItem) => {
         if(item.id === itemId){
           return {
             ...item,
@@ -61,14 +61,14 @@ export const useCart = () => {
         } 
         return item;
       });
-      const filteredCart = updatedCart.filter(cart => cart.quantity > MIN_QUANTITY);
+      const filteredCart = updatedCart.filter((cart : CartItem) => cart.quantity > MIN_QUANTITY);
       setCart(filteredCart);
     };
   
     const emptyCart = ()=> setCart([]);
 
     const isEmpty = useMemo(()=> cart.length === 0, [cart]);
-    const cartTotal = useMemo(()=> cart.reduce((acc, item)=> acc + (item.price * item.quantity), 0), [cart]); 
+    const cartTotal = useMemo(()=> cart.reduce((acc: number, item: CartItem) => acc + (item.price * item.quantity), 0), [cart]); 
 
     return {
         data,

@@ -1,4 +1,16 @@
-export const Header = ({ cart, removeFromCart, increaseQuantity, decreaseQuantity, emptyCart, isEmpty, cartTotal }) => {
+import type { CartContext } from "../types"
+
+type HeaderProps = Omit<CartContext, "data" | "addToCart">;
+
+export const Header = ({ 
+        cart, 
+        removeFromCart, 
+        increaseQuantity, 
+        decreaseQuantity, 
+        emptyCart, 
+        isEmpty, 
+        cartTotal 
+    } : HeaderProps) => {
     return (
         <header className="py-5 header">
             <div className="container-xl">
