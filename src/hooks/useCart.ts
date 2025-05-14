@@ -1,12 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
-import { db } from '../data/db';
 import type { Guitar, CartItem, CartContext } from "../types";
 
 export const useCart = (): CartContext => {
     
-    const [ data ] = useState<Guitar[]>(db);
     const [ cart, setCart ] = useState<CartItem[]>(getStoredCart);
-    console.log(getStoredCart())
+    
     function getStoredCart(){
       const storedCart = localStorage.getItem("cart");
       return storedCart? JSON.parse(storedCart) : [];
@@ -17,7 +15,7 @@ export const useCart = (): CartContext => {
     }, [cart])
   
     const MAX_QUANTITY = 5;
-    const MIN_QUANTITY = 0;
+    const MIN_QUANTITY = 1;
   
     const addToCart = (item: Guitar) => {
       const itemExists = cart.findIndex((element: CartItem) => element.id === item.id);
@@ -71,7 +69,6 @@ export const useCart = (): CartContext => {
     const cartTotal = useMemo(()=> cart.reduce((acc: number, item: CartItem) => acc + (item.price * item.quantity), 0), [cart]); 
 
     return {
-        data,
         cart,
         addToCart,
         removeFromCart,

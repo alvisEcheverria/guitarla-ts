@@ -2,10 +2,10 @@ import { db } from "../data/db";
 import { CartItem, Guitar } from "../types";
 
 export type CartActions = 
-    { type: "add-to-cart", payload: Guitar } |
-    { type: "remove-from-cart", payload: Guitar["id"]} |
-    { type: "increase-quantity", payload: Guitar["id"] } |
-    { type: "decrease-quantity", payload: Guitar["id"] } |
+    { type: "add-to-cart", payload: { item: Guitar } } |
+    { type: "remove-from-cart", payload: { id: Guitar["id"] }} |
+    { type: "increase-quantity", payload: { id: Guitar["id"] } } |
+    { type: "decrease-quantity", payload: { id: Guitar["id"] } } |
     { type: "empty-cart" }
 
 export type CartState = {
