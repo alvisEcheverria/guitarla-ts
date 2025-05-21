@@ -18,6 +18,4 @@ export type CartContext = {
     increaseQuantity: (item: Guitar["id"]) => void;
     decreaseQuantity: (item: Guitar["id"]) => void;
     emptyCart: () => void;
-    isEmpty: boolean;
-    cartTotal: number;
 }
